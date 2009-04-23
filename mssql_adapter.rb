@@ -430,7 +430,7 @@ module ActiveRecord
               row = []
               for i in (1..fields.length)
                 value = reader.get_value(i - 1)
-                if value.class == ClrString
+                if value.class == System::String
                   value = value.to_s
                 end
                 row << value
