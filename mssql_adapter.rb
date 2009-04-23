@@ -1,6 +1,6 @@
 require 'active_record/connection_adapters/abstract_adapter'
-require 'mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'
-require 'System.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'
+require 'mscorlib'
+require 'System.Data'
 
 module System
   class DBNull
@@ -11,10 +11,11 @@ module System
 end
 
 module ActiveRecord
+  
   class Base
+    
     # Establishes a connection to the database that's used by all Active Record objects
-    def self.mssql_connection(config) # :nodoc:
-      
+    def self.mssql_connection(config) # :nodoc:    
       config = config.symbolize_keys
       if config.has_key?(:connection_string)
         connection_string = config[:connection_string]
@@ -29,16 +30,19 @@ module ActiveRecord
         builder.initial_catalog = config[:database]
         connection_string = builder.connection_string
       end
-
       connection = System::Data::SqlClient::SqlConnection.new connection_string
       ConnectionAdapters::MSSQLAdapter.new(connection, logger, config)
     end
+
   end
 
   module ConnectionAdapters
+    
+    #
     # The IronRuby MSSQL adapter works with System.Data.SqlClient
     #
     class MSSQLAdapter < AbstractAdapter
+      
       # Returns 'MSSQL' as adapter name for identification purposes.
       def adapter_name
         'MSSQL'
@@ -48,8 +52,7 @@ module ActiveRecord
       def initialize(connection, logger, config)
         super(connection, logger)
         @config = config
-	@transaction = nil
-
+        @transaction = nil
         connect
       end
 
@@ -63,7 +66,7 @@ module ActiveRecord
         if active?
           disconnect
         end
-	connect
+        connect
       end
 
       # Close the connection.
@@ -135,6 +138,11 @@ module ActiveRecord
       def quote_column_name(name) #:nodoc:
         '[' + name.to_s + ']'
       end
+      
+      # Quotes table names for use in SQL queries.
+      def quote_table_name(name)
+        '[' + name.to_s + ']'
+      end
 
       # Quote date/time values for use in SQL input. Includes microseconds
       # if the value is a Time responding to usec.
@@ -179,13 +187,13 @@ module ActiveRecord
       # Executes an SQL statement
       def execute(sql, name = nil)
         #log(sql, name) do
-          # TODO: @async
-	begin
-	  command = System::Data::SqlClient::SqlCommand.new sql, @connection
-	  command.execute_non_query
-	rescue System::Data::SqlClient::SqlException
-	  raise ActiveRecord::StatementInvalid, "#{$!}"
-	end
+        # TODO: @async
+        begin
+          command = System::Data::SqlClient::SqlCommand.new sql, @connection
+          command.execute_non_query
+        rescue System::Data::SqlClient::SqlException
+          raise ActiveRecord::StatementInvalid, "#{$!}"
+        end
       end
 
       # Executes an UPDATE query and returns the number of affected tuples.
@@ -380,10 +388,6 @@ module ActiveRecord
         # Connects to SQL Server
         def connect
           @connection.open
-        end
-
-        def quote_table_name(name)
-          '[' + name + ']'
         end
 
         # Returns the current ID of a table's sequence.
