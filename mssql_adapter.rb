@@ -157,7 +157,7 @@ module ActiveRecord
       # REFERENTIAL INTEGRITY ====================================
 
       def disable_referential_integrity(&block) #:nodoc:
-        execute(tables.collect { |name| "ALTER TABLE #{quote_table_name(name)} DISABLE TRIGGER ALL" }.join(";"))
+          execute(tables.collect { |name| "ALTER TABLE #{quote_table_name(name)} DISABLE TRIGGER ALL" }.join(";"))
         yield
       ensure
         execute(tables.collect { |name| "ALTER TABLE #{quote_table_name(name)} ENABLE TRIGGER ALL" }.join(";"))
@@ -243,13 +243,13 @@ module ActiveRecord
       # Commits a transaction.
       def commit_db_transaction
         @transaction.commit
-	@transaction = nil
+        @transaction = nil
       end
 
       # Aborts a transaction.
       def rollback_db_transaction
         @transaction.rollback
-	@transaction = nil
+        @transaction = nil
       end
 
       # SCHEMA STATEMENTS ========================================
