@@ -409,7 +409,8 @@ SQL
           for row in rows
             row_hash = {}
             fields.each_with_index do |f, i|
-              row_hash[f.to_s] = row[i]
+              val = row[i]
+              row_hash[f.to_s] = val.respond_to?(:rstrip) ? val.rstrip : val
             end
             result << row_hash
           end
