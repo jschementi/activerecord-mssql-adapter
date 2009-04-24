@@ -117,7 +117,6 @@ module ActiveRecord
           # Not truly string input, so doesn't require (or allow) escape string syntax.
           "'#{value.to_s}'"
         elsif value.kind_of?(String) && column && column.sql_type =~ /^bit/
-          puts "<<<<<<<<<<<<<<<<<<<"
           case value
             when /^[01]*$/
               "B'#{value}'" # Bit-string notation
