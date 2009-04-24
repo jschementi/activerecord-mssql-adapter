@@ -409,7 +409,7 @@ SQL
           for row in rows
             row_hash = {}
             fields.each_with_index do |f, i|
-              row_hash[f] = row[i]
+              row_hash[f.to_s] = row[i]
             end
             result << row_hash
           end
