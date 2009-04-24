@@ -37,7 +37,6 @@ module ActiveRecord
   end
  
   module ConnectionAdapters
-    
     #
     # The IronRuby MSSQL adapter works with System.Data.SqlClient
     #
@@ -118,12 +117,15 @@ module ActiveRecord
           # Not truly string input, so doesn't require (or allow) escape string syntax.
           "'#{value.to_s}'"
         elsif value.kind_of?(String) && column && column.sql_type =~ /^bit/
+          puts "<<<<<<<<<<<<<<<<<<<"
           case value
             when /^[01]*$/
               "B'#{value}'" # Bit-string notation
             when /^[0-9A-F]*$/i
               "X'#{value}'" # Hexadecimal notation
           end
+        elsif column && column.sql_type =~ /^boolean$/
+          value ? 1 : 0
         else
           super
         end
