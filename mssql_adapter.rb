@@ -76,7 +76,7 @@ module ActiveRecord
       def native_database_types #:nodoc:
         {
           :primary_key => "int not null identity primary key",
-          :string => { :name => "varchar", :limit => 8000 },
+          :string => { :name => "varchar", :limit => 255 },
           :text => { :name => "text" },
           :integer => { :name => "int" },
           :float => { :name => "float" },
