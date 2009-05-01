@@ -11,7 +11,6 @@ module System
 end
  
 module ActiveRecord
-  
   class Base
     
     # Establishes a connection to the database that's used by all Active Record objects
@@ -75,7 +74,7 @@ module ActiveRecord
  
       def native_database_types #:nodoc:
         {
-          :primary_key => "int not null identity primary key",
+          :primary_key => "int not null primary key",
           :string => { :name => "varchar", :limit => 255 },
           :text => { :name => "text" },
           :integer => { :name => "int" },
@@ -124,7 +123,7 @@ module ActiveRecord
               "X'#{value}'" # Hexadecimal notation
           end
         elsif column && column.sql_type =~ /^boolean$/
-          value ? 1 : 0
+          "'#{value ? 1 : 0}'"
         else
           super
         end
@@ -250,6 +249,7 @@ module ActiveRecord
  
       # Aborts a transaction.
       def rollback_db_transaction
+        return unless @transaction
         @transaction.rollback
         @transaction = nil
       end
@@ -473,7 +473,7 @@ when t.name = 'text' then 'text'
 else t.name
 end type,
 d.text,
-   c.isnullable
+c.isnullable
 from
 syscolumns c
 inner join systypes t
