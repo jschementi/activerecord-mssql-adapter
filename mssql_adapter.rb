@@ -243,6 +243,7 @@ module ActiveRecord
  
       # Commits a transaction.
       def commit_db_transaction
+        return unless @transaction
         @transaction.commit
         @transaction = nil
       end
