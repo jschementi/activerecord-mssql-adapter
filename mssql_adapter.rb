@@ -108,9 +108,7 @@ module ActiveRecord
  
       # Quotes MSSQL-specific data types for SQL input.
       def quote(value, column = nil) #:nodoc:
-        if value.kind_of?(String) && column && column.type == :binary
-          "#{quoted_string_prefix}'#{column.class.string_to_binary(value)}'"
-        elsif value.kind_of?(String) && column && column.sql_type =~ /^xml$/
+        if value.kind_of?(String) && column && column.sql_type =~ /^xml$/
           "xml '#{quote_string(value)}'"
         elsif value.kind_of?(Numeric) && column && column.sql_type =~ /^money$/
           # Not truly string input, so doesn't require (or allow) escape string syntax.
@@ -122,6 +120,8 @@ module ActiveRecord
             when /^[0-9A-F]*$/i
               "X'#{value}'" # Hexadecimal notation
           end
+        elsif column && column.sql_type =~ /^datetime$/
+          "'#{quoted_date(value)}'"
         elsif column && column.sql_type =~ /^boolean$/
           "'#{value ? 1 : 0}'"
         else
@@ -142,16 +142,6 @@ module ActiveRecord
       # Quotes table names for use in SQL queries.
       def quote_table_name(name)
         '[' + name.to_s + ']'
-      end
- 
-      # Quote date/time values for use in SQL input. Includes microseconds
-      # if the value is a Time responding to usec.
-      def quoted_date(value) #:nodoc:
-        if value.acts_like?(:time) && value.respond_to?(:usec)
-          "#{super}.#{sprintf("%06d", value.usec)}"
-        else
-          super
-        end
       end
  
       # REFERENTIAL INTEGRITY ====================================
