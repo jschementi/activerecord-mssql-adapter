@@ -179,9 +179,14 @@ module ActiveRecord
         #log(sql, name) do
         # TODO: @async
         begin
+          table_name = get_table_name_from_sql sql
+          set_identity_insert_on table_name if (is_insert_sql sql and includes_id_field sql)
+          
           command = System::Data::SqlClient::SqlCommand.new sql, @connection
           command.transaction = @transaction
           command.execute_non_query
+          
+          set_identity_insert_off table_name if (is_insert_sql sql and includes_id_field sql)
         rescue System::Data::SqlClient::SqlException
           raise ActiveRecord::StatementInvalid, "#{$!}"
         end
@@ -374,7 +379,7 @@ SQL
       end
       
       def includes_id_field(sql)
-        sql =~ /[id]/i
+        sql =~ /\[id\]/i
       end
       
       def set_identity_insert_on(table_name)
