@@ -75,17 +75,17 @@ module ActiveRecord
       def native_database_types #:nodoc:
         {
           :primary_key => "int not null identity(1,1) primary key ",
-          :string => { :name => "varchar", :limit => 255 },
-          :text => { :name => "text" },
-          :integer => { :name => "int" },
-          :float => { :name => "float" },
-          :decimal => { :name => "numeric" },
-          :datetime => { :name => "datetime" },
-          :timestamp => { :name => "datetime" },
-          :time => { :name => "datetime" },
-          :date => { :name => "datetime" },
-          :binary => { :name => "image" },
-          :boolean => { :name => "bit" }
+          :string      => { :name => "varchar", :limit => 255 },
+          :text        => { :name => "text" },
+          :integer     => { :name => "int" },
+          :float       => { :name => "float" },
+          :decimal     => { :name => "numeric" },
+          :datetime    => { :name => "datetime" },
+          :timestamp   => { :name => "datetime" },
+          :time        => { :name => "datetime" },
+          :date        => { :name => "datetime" },
+          :binary      => { :name => "image" },
+          :boolean     => { :name => "bit" }
         }
       end
  
