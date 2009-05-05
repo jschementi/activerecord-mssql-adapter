@@ -364,6 +364,11 @@ SQL
         end
       end
       
+      def has_identity_column(table_name)
+        result = select "SELECT OBJECTPROPERTY(OBJECT_ID('#{table_name}'), 'TableHasIdentity') AS has_identity"
+        result.first["has_identity"] == 1
+      end
+    
       protected
         # Returns the version of the connected SQL Server.
         def mssql_version
@@ -481,6 +486,8 @@ end_sql
         def get_table_name_from_sql(sql)
           sql.split(" ", 4)[2]
         end
+        
+
     end
   end
 end
