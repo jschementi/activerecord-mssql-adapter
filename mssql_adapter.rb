@@ -368,6 +368,10 @@ SQL
         result = select "SELECT OBJECTPROPERTY(OBJECT_ID('#{table_name}'), 'TableHasIdentity') AS has_identity"
         result.first["has_identity"] == 1
       end
+      
+      def is_insert_sql(sql)
+        sql =~ /^insert/i
+      end
     
       protected
         # Returns the version of the connected SQL Server.
