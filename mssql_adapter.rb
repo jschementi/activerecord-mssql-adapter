@@ -383,11 +383,11 @@ SQL
       end
       
       def set_identity_insert_on(table_name)
-        set_identity_insert table_name, "ON"
+        set_identity_insert table_name, "ON" if has_identity_column table_name
       end
       
       def set_identity_insert_off(table_name)
-        set_identity_insert table_name, "OFF"
+        set_identity_insert table_name, "OFF" if has_identity_column table_name
       end
       
       def set_identity_insert(table_name, setting)
