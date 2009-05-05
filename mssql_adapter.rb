@@ -376,6 +376,18 @@ SQL
       def includes_id_field(sql)
         sql =~ /[id]/i
       end
+      
+      def set_identity_insert_on(table_name)
+        set_identity_insert table_name, "ON"
+      end
+      
+      def set_identity_insert_off(table_name)
+        set_identity_insert table_name, "OFF"
+      end
+      
+      def set_identity_insert(table_name, setting)
+        execute "SET IDENTITY_INSERT #{table_name} #{setting}"
+      end
     
       protected
         # Returns the version of the connected SQL Server.
