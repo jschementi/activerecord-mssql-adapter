@@ -163,7 +163,7 @@ module ActiveRecord
  
       # Executes an INSERT query and returns the new record's ID
       def insert(sql, name = nil, pk = nil, id_value = nil, sequence_name = nil)
-        table = sql.split(" ", 4)[2]
+        table = get_table_name_from_sql sql
         super || last_insert_id(table, sequence_name || default_sequence_name(table, pk))
       end
  
@@ -476,6 +476,10 @@ c.id = object_id('#{table_name}')
 order by
 c.colid
 end_sql
+        end
+        
+        def get_table_name_from_sql(sql)
+          sql.split(" ", 4)[2]
         end
     end
   end
