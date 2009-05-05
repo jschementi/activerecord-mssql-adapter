@@ -372,6 +372,10 @@ SQL
       def is_insert_sql(sql)
         sql =~ /^insert/i
       end
+      
+      def includes_id_field(sql)
+        sql =~ /[id]/i
+      end
     
       protected
         # Returns the version of the connected SQL Server.
