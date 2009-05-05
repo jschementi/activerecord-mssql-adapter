@@ -121,7 +121,7 @@ module ActiveRecord
               "X'#{value}'" # Hexadecimal notation
           end
         elsif column && column.sql_type =~ /^datetime$/
-          "'#{quoted_date(value)}'"
+          value.nil? ? super : "'#{quoted_date(value)}'"
         elsif column && column.sql_type =~ /^boolean$/
           "'#{value ? 1 : 0}'"
         else
