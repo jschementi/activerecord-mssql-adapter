@@ -413,7 +413,7 @@ SQL
           reader = nil
           begin
             command = System::Data::SqlClient::SqlCommand.new sql, @connection
-   command.transaction =   @transaction
+            command.transaction =   @transaction
             reader = command.execute_reader
             fields = []
             schema = reader.get_schema_table
