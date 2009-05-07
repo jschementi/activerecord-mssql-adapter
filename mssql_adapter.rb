@@ -379,7 +379,7 @@ SQL
       end
       
       def includes_id_field(sql)
-        sql =~ /\[id\]/i
+        sql =~ /\[id\]|\[\w*_id\]/i
       end
       
       def set_identity_insert_on(table_name)
