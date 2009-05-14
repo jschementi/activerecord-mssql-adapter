@@ -75,17 +75,18 @@ module ActiveRecord
       def native_database_types #:nodoc:
         {
           :primary_key => "int not null identity(1,1) primary key ",
-          :string => { :name => "varchar", :limit => 255 },
-          :text => { :name => "text" },
-          :integer => { :name => "int" },
-          :float => { :name => "float" },
-          :decimal => { :name => "numeric" },
-          :datetime => { :name => "datetime" },
-          :timestamp => { :name => "datetime" },
-          :time => { :name => "datetime" },
-          :date => { :name => "datetime" },
-          :binary => { :name => "varbinary", :limit => 'MAX' },
-          :boolean => { :name => "bit" }
+          :string      => { :name => "varchar", :limit => 255 },
+          :text        => { :name => "text" },
+          :integer     => { :name => "int" },
+          :float       => { :name => "float" },
+          :decimal     => { :name => "numeric" },
+          :datetime    => { :name => "datetime" },
+          :timestamp   => { :name => "datetime" },
+          :time        => { :name => "datetime" },
+          :date        => { :name => "datetime" },
+          :binary      => { :name => "varbinary", :limit => 'MAX' },
+          :binary      => { :name => "image" },
+          :boolean     => { :name => "bit" }
         }
       end
  
@@ -121,7 +122,7 @@ module ActiveRecord
               "X'#{value}'" # Hexadecimal notation
           end
         elsif column && column.sql_type =~ /^datetime$/
-          "'#{quoted_date(value)}'"
+          value.nil? ? super : "'#{quoted_date(value)}'"
         elsif column && column.sql_type =~ /^boolean$/
           "'#{value ? 1 : 0}'"
         else
