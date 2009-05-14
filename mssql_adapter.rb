@@ -1,7 +1,7 @@
 require 'active_record/connection_adapters/abstract_adapter'
 require 'mscorlib'
 require 'System.Data'
- 
+
 module System
   class DBNull
     def nil?
@@ -84,7 +84,7 @@ module ActiveRecord
           :timestamp => { :name => "datetime" },
           :time => { :name => "datetime" },
           :date => { :name => "datetime" },
-          :binary => { :name => "image" },
+          :binary => { :name => "varbinary", :limit => 'MAX' },
           :boolean => { :name => "bit" }
         }
       end
@@ -413,7 +413,7 @@ SQL
           reader = nil
           begin
             command = System::Data::SqlClient::SqlCommand.new sql, @connection
-   command.transaction =   @transaction
+            command.transaction = @transaction
             reader = command.execute_reader
             fields = []
             schema = reader.get_schema_table
