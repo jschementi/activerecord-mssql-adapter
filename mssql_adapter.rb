@@ -1,10 +1,16 @@
 require 'active_record/connection_adapters/abstract_adapter'
+require 'active_support/core_ext/kernel/requires'
 require 'mscorlib'
 require 'System.Data'
 
 module System
   class DBNull
     def nil?
+      true
+    end
+    
+    # shri
+    def empty?
       true
     end
   end
@@ -481,3 +487,4 @@ end_sql
     end
   end
 end
+
