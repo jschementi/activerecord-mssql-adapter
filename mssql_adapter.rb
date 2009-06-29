@@ -186,9 +186,14 @@ module ActiveRecord
         #log(sql, name) do
         # TODO: @async
         begin
+          table_name = get_table_name_from_sql(sql)
+          set_identity_insert_on(table_name) if (is_insert_sql(sql) and includes_id_field(sql))
+          
           command = System::Data::SqlClient::SqlCommand.new sql, @connection
           command.transaction = @transaction
           command.execute_non_query
+          
+          set_identity_insert_off(table_name) if (is_insert_sql(sql) and includes_id_field(sql))
         rescue System::Data::SqlClient::SqlException
           raise ActiveRecord::StatementInvalid, "#{$!}"
         end
@@ -371,6 +376,31 @@ SQL
         end
       end
       
+      def has_identity_column(table_name)
+        result = select "SELECT OBJECTPROPERTY(OBJECT_ID('#{table_name}'), 'TableHasIdentity') AS has_identity"
+        result.first["has_identity"] == 1
+      end
+      
+      def is_insert_sql(sql)
+        sql =~ /^insert/i
+      end
+      
+      def includes_id_field(sql)
+        sql =~ /\[id\]|\[\w*_id\]/i
+      end
+      
+      def set_identity_insert_on(table_name)
+        set_identity_insert table_name, "ON" if has_identity_column table_name
+      end
+      
+      def set_identity_insert_off(table_name)
+        set_identity_insert table_name, "OFF" if has_identity_column table_name
+      end
+      
+      def set_identity_insert(table_name, setting)
+        execute "SET IDENTITY_INSERT #{table_name} #{setting}"
+      end
+      
       protected
         # Returns the version of the connected SQL Server.
         def mssql_version
@@ -483,6 +513,10 @@ c.id = object_id('#{table_name}')
 order by
 c.colid
 end_sql
+        end
+        
+        def get_table_name_from_sql(sql)
+          sql.split(" ", 4)[2]
         end
     end
   end
